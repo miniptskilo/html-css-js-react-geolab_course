@@ -1,0 +1,41 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox {
+  display: none;
+}
+
+.toggle {
+  width: 80px;
+  height: 40px;
+  border-radius: 50px;
+  background-color: #87cefa; /* დღე */
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.4s;
+}
+
+.circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ffd93b; /* მზე */
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transition: 0.4s;
+}
+
+.checkbox:checked + .toggle {
+  background-color: #0a0a43; /* ღამე */
+}
+
+.checkbox:checked + .toggle .circle {
+  transform: translateX(40px);
+  background-color: #ccc;
+  box-shadow: inset -6px -3px 0 -2px #aaa;
+}
