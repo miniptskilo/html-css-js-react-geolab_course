@@ -1,0 +1,575 @@
+// =====================================================
+//  SportsPro — Main Stylesheet (SCSS source)
+//  Compiled to ../css/style.css with: sass scss/style.scss css/style.css
+// =====================================================
+
+// ---------- Variables ----------
+$green:   #00c853;
+$dark:    #0d0d0d;
+$card:    #1a1a1a;
+$border:  #2a2a2a;
+$text:    #e0e0e0;
+$muted:   #828282;
+$white:   #ffffff;
+$red:     #e53935;
+$yellow:  #fdd835;
+$geolab-purple: #7c3aed;
+
+$font-head: 'Oswald', sans-serif;
+$font-body: 'Inter', sans-serif;
+
+$radius: 8px;
+$transition-fast: .2s ease;
+$transition-mid: .35s ease;
+
+$bp-tablet: 900px;
+$bp-mobile: 600px;
+
+// ---------- Mixins ----------
+@mixin flex($justify: flex-start, $align: stretch, $gap: 0) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+  @if $gap != 0 { gap: $gap; }
+}
+
+@mixin card-base {
+  background: $card;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 20px;
+  transition: border-color $transition-fast, transform $transition-fast, box-shadow $transition-fast;
+}
+
+@mixin section-spacing {
+  padding: 70px 0;
+}
+
+// ---------- Reset ----------
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: $dark;
+  color: $text;
+  font-family: $font-body;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+// ---------- Animations ----------
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba($green, .35); }
+  50%      { box-shadow: 0 0 0 10px rgba($green, 0); }
+}
+@keyframes underlineGrow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+.fade-in {
+  animation: fadeInUp .7s ease both;
+}
+// stagger children of a grid/flex container automatically (no JS needed)
+.three-column-grid, .four-column-grid, .two-column-grid {
+  > .fade-in:nth-child(1) { animation-delay: .05s; }
+  > .fade-in:nth-child(2) { animation-delay: .15s; }
+  > .fade-in:nth-child(3) { animation-delay: .25s; }
+  > .fade-in:nth-child(4) { animation-delay: .35s; }
+}
+
+// ---------- Header / Navbar ----------
+.site-header {
+  position: sticky; top: 0; z-index: 200;
+}
+
+.navbar {
+  background: rgba(17,17,17,.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 2px solid $green;
+}
+
+.nav-container {
+  @include flex(space-between, center);
+  height: 64px;
+  gap: 16px;
+}
+
+.brand-group { @include flex(flex-start, center, 14px); }
+
+.logo {
+  font-family: $font-head;
+  font-size: 1.5rem; font-weight: 700;
+  color: $green; text-decoration: none;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.geolab-badge {
+  @include flex(flex-start, center, 6px);
+  padding: 3px 10px 3px 4px;
+  border-left: 1px solid $border;
+  margin-left: 4px;
+  padding-left: 14px;
+  text-decoration: none;
+  transition: opacity $transition-fast;
+
+  img { height: 26px; width: auto; border-radius: 5px; }
+
+  &:hover { opacity: .8; }
+}
+
+.nav-menu {
+  @include flex(center, center, 26px);
+
+  a {
+    position: relative;
+    color: $text; text-decoration: none;
+    font-size: .9rem; font-weight: 500;
+    padding: 6px 0;
+    transition: color $transition-fast;
+
+    &::after {
+      content: '';
+      position: absolute; left: 0; bottom: -2px;
+      height: 2px; width: 0; background: $green;
+      transition: width $transition-mid;
+    }
+    &:hover { color: $green; }
+    &:hover::after, &.active::after { width: 100%; }
+    &.active { color: $green; }
+  }
+}
+
+.nav-buttons { @include flex(flex-start, center, 10px); }
+
+// CSS-only hamburger menu (checkbox hack, no JS)
+.nav-toggle-checkbox { display: none; }
+
+.nav-toggle-label {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 6px;
+
+  span {
+    width: 24px; height: 2px; background: $white;
+    transition: transform $transition-fast, opacity $transition-fast;
+  }
+}
+
+// ---------- Buttons ----------
+.button {
+  display: inline-block; padding: 9px 20px;
+  background: $green; color: #000;
+  font-weight: 600; font-size: .85rem;
+  border-radius: 4px; text-decoration: none;
+  border: none; cursor: pointer;
+  transition: transform $transition-fast, opacity $transition-fast, box-shadow $transition-fast;
+
+  &:hover { opacity: .88; transform: translateY(-2px); box-shadow: 0 6px 16px rgba($green,.25); }
+  &:active { transform: translateY(0); }
+}
+.button-outline {
+  background: transparent; color: $green;
+  border: 1px solid $green;
+  &:hover { background: rgba($green, .08); }
+}
+.button-small { padding: 6px 14px; font-size: .8rem; }
+.button-red { background: $red; color: #fff; }
+.button-full { display: block; width: 100%; text-align: center; }
+
+// ---------- Main / Layout ----------
+.page-content { padding: 30px 0 60px; }
+
+// ---------- Hero ----------
+.hero {
+  position: relative;
+  @include section-spacing;
+  padding-top: 90px;
+  background:
+    radial-gradient(circle at 80% 20%, rgba($green,.12), transparent 45%),
+    linear-gradient(135deg, #111 0%, #122512 100%);
+  border-bottom: 1px solid $border;
+  text-align: center;
+  overflow: hidden;
+
+  .hero-icon {
+    font-size: 2.6rem;
+    display: inline-block;
+    animation: floatY 3.5s ease-in-out infinite;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: $font-head;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    color: $white;
+    text-transform: uppercase; letter-spacing: 2px;
+    animation: fadeInUp .8s ease both;
+
+    span { color: $green; }
+  }
+
+  p {
+    color: $muted; margin-top: 14px; font-size: 1.15rem;
+    max-width: 560px; margin-left: auto; margin-right: auto;
+    animation: fadeInUp .8s ease .15s both;
+  }
+
+  .hero-actions {
+    margin-top: 30px;
+    @include flex(center, center, 14px);
+    flex-wrap: wrap;
+    animation: fadeInUp .8s ease .3s both;
+  }
+
+  .hero-stats {
+    margin-top: 50px;
+    @include flex(center, stretch, 0);
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+}
+
+.stat-pill {
+  @include card-base;
+  flex: 1; min-width: 140px;
+  text-align: center;
+  animation: pulseGlow 3s infinite;
+
+  strong { display: block; font-family: $font-head; font-size: 1.8rem; color: $green; }
+  span { font-size: .78rem; color: $muted; text-transform: uppercase; letter-spacing: .5px; }
+
+  &:hover { transform: translateY(-4px); border-color: $green; }
+}
+
+// ---------- Section heading ----------
+.section-heading {
+  font-family: $font-head;
+  font-size: 1.7rem; color: $white;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 28px;
+  @include flex(flex-start, center, 10px);
+
+  &::after { content: ''; flex: 1; height: 2px; background: $border; }
+}
+
+.section-sub {
+  color: $muted; max-width: 620px; margin: -16px 0 28px;
+}
+
+section[id] { scroll-margin-top: 76px; }
+
+// ---------- Grids ----------
+.three-column-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.two-column-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.four-column-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+// ---------- Card ----------
+.card {
+  @include card-base;
+  &:hover { border-color: $green; transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.35); }
+}
+
+.card-heading {
+  font-family: $font-head;
+  font-size: 1rem; color: $white;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid $border;
+  padding-bottom: 10px;
+}
+
+// ---------- Feature / "why us" cards ----------
+.feature-card {
+  @include card-base;
+  text-align: center;
+
+  .feature-icon {
+    font-size: 2rem; margin-bottom: 12px;
+    transition: transform $transition-mid;
+  }
+  h3 { font-family: $font-head; color: $white; font-size: 1.05rem; margin-bottom: 8px; text-transform: uppercase; }
+  p  { color: $muted; font-size: .88rem; }
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: $green;
+    .feature-icon { transform: scale(1.15) rotate(-4deg); }
+  }
+}
+
+// ---------- Table ----------
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+thead th {
+  background: #111; color: $green;
+  font-family: $font-head; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .5px; padding: 12px 14px;
+  text-align: left; border-bottom: 2px solid $green;
+}
+tbody tr { border-bottom: 1px solid $border; transition: background $transition-fast; }
+tbody tr:hover { background: #1f1f1f; }
+tbody td { padding: 11px 14px; color: $text; }
+.rank-number { font-weight: 700; color: $green; }
+.points { font-weight: 700; color: $white; }
+
+// ---------- Match card ----------
+.match-box {
+  @include card-base;
+  @include flex(space-between, center, 10px);
+}
+.team-name { font-weight: 600; font-size: .95rem; flex: 1; }
+.team-name.away { text-align: right; }
+.score {
+  font-family: $font-head; font-size: 1.4rem; font-weight: 700;
+  color: $white; min-width: 70px; text-align: center;
+}
+.match-day { font-size: .75rem; color: $muted; text-align: center; }
+.status-tag {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 3px; font-size: .7rem;
+  font-weight: 700; text-transform: uppercase;
+}
+.status-live     { background: $red; color: #fff; animation: pulseGlow 2s infinite; }
+.status-finished { background: $border; color: $muted; }
+.status-upcoming { background: #1e3a1e; color: $green; }
+
+// ---------- News card ----------
+.article-card {
+  text-decoration: none; display: block;
+
+  .article-image {
+    width: 100%; height: 180px; object-fit: cover;
+    border-radius: 6px 6px 0 0; background: #222;
+    @include flex(center, center, 0);
+    font-size: 3rem;
+    transition: transform $transition-mid;
+    overflow: hidden;
+  }
+  .article-body { padding: 14px 0 0; }
+  .article-category {
+    font-size: .7rem; font-weight: 700;
+    color: $green; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .article-title {
+    font-family: $font-head; font-size: 1.05rem; color: $white;
+    line-height: 1.3; margin-bottom: 8px;
+  }
+  .article-meta { font-size: .75rem; color: $muted; }
+
+  &:hover .article-image { transform: scale(1.06); }
+}
+
+// ---------- Forms ----------
+.input-group { margin-bottom: 18px; }
+.input-group label {
+  display: block; margin-bottom: 6px;
+  font-size: .85rem; color: $muted; font-weight: 500;
+}
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%; padding: 10px 14px;
+  background: #111; border: 1px solid $border;
+  border-radius: 4px; color: $white;
+  font-size: .9rem; font-family: $font-body;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &:focus { outline: none; border-color: $green; box-shadow: 0 0 0 3px rgba($green,.15); }
+}
+.input-group textarea { resize: vertical; min-height: 120px; }
+
+.auth-box {
+  @include card-base;
+  max-width: 440px; margin: 0 auto;
+  animation: fadeInUp .6s ease both;
+}
+.auth-title {
+  font-family: $font-head; font-size: 1.6rem; color: $white;
+  text-transform: uppercase; margin-bottom: 24px; text-align: center;
+}
+
+// Newsletter section
+.newsletter {
+  @include section-spacing;
+  background: linear-gradient(135deg, #101f15, #0d0d0d);
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
+  text-align: center;
+
+  h2 { font-family: $font-head; font-size: 2rem; color: $white; text-transform: uppercase; margin-bottom: 10px; }
+  p { color: $muted; margin-bottom: 28px; }
+
+  form {
+    @include flex(center, stretch, 12px);
+    flex-wrap: wrap;
+    max-width: 520px; margin: 0 auto;
+
+    input {
+      flex: 1; min-width: 220px;
+      padding: 12px 16px; border-radius: 4px;
+      border: 1px solid $border; background: #111; color: $white;
+      font-family: $font-body; font-size: .9rem;
+      transition: border-color $transition-fast;
+      &:focus { outline: none; border-color: $green; }
+    }
+  }
+
+  .form-note { margin-top: 14px; font-size: .78rem; color: $muted; }
+  .form-feedback:empty { display: none; }
+  .form-feedback { margin-top: 16px; max-width: 520px; margin-left: auto; margin-right: auto; }
+}
+
+// ---------- Alert ----------
+.alert { padding: 12px 16px; border-radius: 4px; margin-bottom: 16px; font-size: .9rem; }
+.alert-error   { background: #2a1010; border: 1px solid $red;   color: #ff6b6b; }
+.alert-success { background: #0a2a0a; border: 1px solid $green; color: $green; }
+
+// ---------- Footer ----------
+.footer {
+  background: #0a0a0a; border-top: 1px solid $border;
+  padding: 50px 0 0; color: $muted; font-size: .85rem;
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: 32px;
+    padding-bottom: 36px;
+  }
+
+  h4 { color: $white; font-family: $font-head; font-size: .95rem; text-transform: uppercase; margin-bottom: 14px; letter-spacing: .5px; }
+
+  ul li { margin-bottom: 8px; }
+  ul li a {
+    color: $muted; text-decoration: none; transition: color $transition-fast;
+    &:hover { color: $green; }
+  }
+
+  .footer-about p { line-height: 1.7; max-width: 320px; }
+
+  .footer-geolab {
+    @include flex(flex-start, center, 10px);
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: $card;
+    border: 1px solid $border;
+    border-radius: $radius;
+    text-decoration: none;
+    width: fit-content;
+    transition: border-color $transition-fast, transform $transition-fast;
+
+    img { height: 30px; width: auto; border-radius: 6px; }
+    span { color: $text; font-size: .78rem; line-height: 1.3; }
+
+    &:hover { border-color: $geolab-purple; transform: translateY(-2px); }
+  }
+
+  .footer-bottom {
+    border-top: 1px solid $border;
+    padding: 18px 0;
+    text-align: center;
+    font-size: .78rem;
+  }
+}
+
+// ---------- Player stats ----------
+.player-stat { display: inline-block; margin-right: 14px; }
+.player-stat span { color: $green; font-weight: 700; }
+
+// ---------- Back to top ----------
+.to-top {
+  position: fixed; right: 22px; bottom: 22px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: $green; color: #000;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; font-size: 1.1rem;
+  opacity: .9;
+  transition: opacity $transition-fast, transform $transition-fast;
+  z-index: 150;
+
+  &:hover { opacity: 1; transform: translateY(-4px); }
+}
+
+// =====================================================
+// Responsive
+// =====================================================
+@media (max-width: $bp-tablet) {
+  .three-column-grid, .four-column-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer .footer-grid { grid-template-columns: 1fr 1fr; }
+  .hero { padding-top: 80px; }
+}
+
+@media (max-width: $bp-mobile) {
+  .three-column-grid, .four-column-grid, .two-column-grid { grid-template-columns: 1fr; }
+  .footer .footer-grid { grid-template-columns: 1fr; }
+
+  .hero h1 { font-size: 2rem; }
+  .hero-stats { flex-direction: column; }
+
+  .nav-toggle-label { display: flex; }
+
+  .nav-menu {
+    position: fixed; top: 64px; left: 0; right: 0;
+    background: #111; border-bottom: 2px solid $green;
+    flex-direction: column; align-items: flex-start;
+    padding: 18px 20px; gap: 16px;
+    transform: translateY(-130%);
+    transition: transform $transition-mid;
+    z-index: 199;
+  }
+
+  .nav-buttons {
+    display: none;
+    position: fixed; top: auto; left: 0; right: 0;
+    background: #111;
+    flex-direction: column; width: 100%;
+    padding: 0 20px 16px; gap: 10px;
+    z-index: 199;
+    transform: translateY(-130%);
+    transition: transform $transition-mid;
+  }
+
+  // When checkbox is checked, slide both menu and buttons into view
+  .nav-toggle-checkbox:checked ~ .nav-menu,
+  .nav-toggle-checkbox:checked ~ .nav-buttons {
+    transform: translateY(0);
+    display: flex;
+  }
+  .nav-toggle-checkbox:checked ~ .nav-buttons { top: calc(64px + 230px); }
+
+  .nav-toggle-checkbox:checked ~ .nav-toggle-label {
+    span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    span:nth-child(2) { opacity: 0; }
+    span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+
+  .geolab-badge span { display: none; }
+  .match-box { flex-wrap: wrap; }
+  .newsletter form { flex-direction: column; }
+}
